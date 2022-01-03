@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Search } from './Search';
+import { Video } from './Video';
+
 
 export const App = () => {
     const baseUrl = 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.youtube.com%2Ffeeds%2Fvideos.xml%3Fchannel_id%3D'
     const [video, setVideo] = useState([]);
     const [currentChannelId, setCurrendChannelId] = useState(); //userState내부에 셋팅할 파라미터를 넣어주면 된다.
-    const [channelId, setChannelId] = useState('');
+    
     const [channelName, setChannelName] = useState();
     const [searchError, setSearchError] = useState('');
     useEffect(()=> {
@@ -37,28 +40,11 @@ export const App = () => {
     return (
         <div className="app-container">
              <h1>Latest Youtube video</h1>
-             <div className="search">
-                 <input type ="text" onChange={event => setChannelId(event.target.value)}placeholder="Enter your favourit channel ID"/>
-                 <button onClick={()=>setCurrendChannelId(channelId)}>Get Videos</button>
-             </div>
-             <div className="search__error">
-                 {searchError}
-             </div>
+             <Search searchError={searchError}
+                    setCurrendChannelId={(id)=>setCurrendChannelId(id)}/>
              {channelName && <h2>Videos from {channelName}</h2>}
              <div className="videos">
-                {video.map(video=> (
-                    <div key={video.guid} className="videos__item">
-                    <div className="video__image">
-                        <a targe="__blank" href={video.link}>
-                            <img src={`https://i4.ytimg.com/vi/${video.guid.split(':')[2]}/mqdefault.jpg`}/> 
-                        </a>
-                    </div>
-                    <div className="video__footer">
-                        <p>{video.title}</p>
-                    </div>
-                </div>
-                    
-                ))}
+                {video.map(video=> <Video key={video.guid} video={video}/>)}
              </div>
         </div>
        
